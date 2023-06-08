@@ -3,45 +3,54 @@ import "./TaskForm.css";
 
 function TaskForm() {
   const [task, setTask] = useState("");
-  const [taskList, setTaskList] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (task) {
-      setTaskList([...taskList, task]);
+      setTasks([...tasks, task]);
       setTask("");
     }
   };
 
+  const handleDelete = (index) => {
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(index, 1);
+    setTasks(updatedTasks);
+  };
+
   return (
-    <div>
-      <form className="task-form" onSubmit={handleSubmit}>
-        <h2>Add Task</h2>
+    <div className="task-form">
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="task">Task</label>
           <input
             type="text"
-            id="task"
             value={task}
             onChange={(e) => setTask(e.target.value)}
-            placeholder="Enter your task"
+            placeholder="Enter a task"
             required
           />
+          <button type="submit">Add Task</button>
         </div>
-        <button type="submit" className="add-button">
-          Add Task
-        </button>
       </form>
-
-      <div className="task-list">
-        <h2>Task List</h2>
-        <ul>
-          {taskList.map((item, index) => (
-            <li key={index}>{item}</li>
+      {tasks.length > 0 ? (
+        <ul className="task-list">
+          {tasks.map((task, index) => (
+            <li key={index}>
+              {task}
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(index)}
+              >
+                X
+              </button>
+            </li>
           ))}
         </ul>
-      </div>
+      ) : (
+        <p>No tasks added yet.</p>
+      )}
     </div>
   );
 }
