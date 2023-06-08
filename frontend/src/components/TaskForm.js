@@ -1,38 +1,49 @@
 import React, { useState } from "react";
-import axios from "axios";
+import "./TaskForm.css";
 
-const TaskForm = () => {
+function TaskForm() {
   const [task, setTask] = useState("");
+  const [taskList, setTaskList] = useState([]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      await axios.post("/api/tasks", { task });
-      alert("Task added successfully!");
+    if (task) {
+      setTaskList([...taskList, task]);
       setTask("");
-    } catch (error) {
-      console.error(error);
     }
   };
 
   return (
     <div>
-      <h2>Add Task</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Task:
+      <form className="task-form" onSubmit={handleSubmit}>
+        <h2>Add Task</h2>
+        <div className="form-group">
+          <label htmlFor="task">Task</label>
           <input
             type="text"
+            id="task"
             value={task}
             onChange={(e) => setTask(e.target.value)}
+            placeholder="Enter your task"
+            required
           />
-        </label>
-        <br />
-        <button type="submit">Add</button>
+        </div>
+        <button type="submit" className="add-button">
+          Add Task
+        </button>
       </form>
+
+      <div className="task-list">
+        <h2>Task List</h2>
+        <ul>
+          {taskList.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-};
+}
 
 export default TaskForm;
